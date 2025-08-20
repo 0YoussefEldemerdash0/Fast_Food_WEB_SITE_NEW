@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Full Menu</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/all.min.css" />
+</head>
+<body>
+
+<!-- Header -->
+<header class="navbar">
+  <div class="logo"><a href="main.html">BrandName</a></div>
+  <nav>
+    <ul>
+      <li><a href="menu.html#meats">Meats</a></li>
+      <li><a href="menu.html#main-dishes">Main Dishes</a></li>
+      <li><a href="menu.html#sandwiches">Sandwiches</a></li>
+      <li><a href="menu.html#offers">Offers</a></li>
+    </ul>
+  </nav>
+  <div id="navbar-right"></div>
+</header>
+
+<section class="menu-page" id="menu-sections">
+  <!-- المنتجات ستظهر هنا ديناميكياً -->
+</section>
+
+<button id="confirmOrderBtn" class="btn primary wide">تأكيد الطلب</button>
+
+<div class="cart-dropdown-container">
+    <a href="order.html" id="cart-icon">🛒 <span id="cart-count">0</span></a>
+</div>
+
+<footer class="footer"></footer>
+<button class="scroll-top" id="scrollTopBtn">↑</button>
+
+<script src="script.js"></script>
+<script src="menu-script.js"></script>
+<script>
+// عرض المنتجات من localStorage
+document.addEventListener('DOMContentLoaded', () => {
+  const menuData = JSON.parse(localStorage.getItem("menuData")) || [];
+  const sections = {
+    "Meats": [],
+    "Main Dishes": [],
+    "Sandwiches": [],
+    "Offers": []
+  };
+  menuData.forEach(item => {
+    if (sections[item.category]) sections[item.category].push(item);
+  });
+
+  const menuSections = document.getElementById("menu-sections");
+  menuSections.innerHTML = "";
+  Object.keys(sections).forEach(cat => {
+    if (sections[cat].length > 0) {
+      let html = `<h2 id="${cat.replace(/\s/g,'-').toLowerCase()}">${cat}</h2><div class="grid">`;
+      sections[cat].forEach(item => {
+        html += `
+          <div class="card">
+            <div class="media"><img src="${item.img}" alt="Product"></div>
+            <div class="content">
+              <h4 class="title">${item.name}</h4>
+              <p class="desc">${item.desc}</p>
+              <div class="meta"><span class="price">$${item.price.toFixed(2)}</span></div>
+              <button class="btn cta">Add</button>
+            </div>
+          </div>
+        `;
+      });
+      html += "</div>";
+      menuSections.innerHTML += html;
+    }
+  });
+});
+</script>
+</body>
+</html>
